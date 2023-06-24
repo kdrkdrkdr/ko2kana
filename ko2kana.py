@@ -95,3 +95,6 @@ def korean2katakana(text):
     result = jaconv.alphabet2kata(kr2ro)
     result = result.replace('/', '').replace('|', 'ー').replace('^', '')
     return result
+
+
+print(korean2katakana("안녕하세요."))
