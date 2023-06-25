@@ -1,0 +1,1 @@
+from .ko2kana import korean2katakana

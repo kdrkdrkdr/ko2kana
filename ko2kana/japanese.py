@@ -2,7 +2,6 @@ import re
 from unidecode import unidecode
 import pyopenjtalk
 
-
 # Regular expression matching Japanese without punctuation marks:
 _japanese_characters = re.compile(
     r'[A-Za-z\d\u3005\u3040-\u30ff\u4e00-\u9fff\uff11-\uff19\uff21-\uff3a\uff41-\uff5a\uff66-\uff9d]')
@@ -14,54 +13,6 @@ _japanese_marks = re.compile(
 # List of (symbol, Japanese) pairs for marks:
 _symbols_to_japanese = [(re.compile('%s' % x[0]), x[1]) for x in [
     ('％', 'パーセント')
-]]
-
-# List of (romaji, ipa) pairs for marks:
-_romaji_to_ipa = [(re.compile('%s' % x[0]), x[1]) for x in [
-    ('ts', 'ʦ'),
-    ('u', 'ɯ'),
-    ('j', 'ʥ'),
-    ('y', 'j'),
-    ('ni', 'n^i'),
-    ('nj', 'n^'),
-    ('hi', 'çi'),
-    ('hj', 'ç'),
-    ('f', 'ɸ'),
-    ('I', 'i*'),
-    ('U', 'ɯ*'),
-    ('r', 'ɾ')
-]]
-
-# List of (romaji, ipa2) pairs for marks:
-_romaji_to_ipa2 = [(re.compile('%s' % x[0]), x[1]) for x in [
-    ('u', 'ɯ'),
-    ('ʧ', 'tʃ'),
-    ('j', 'dʑ'),
-    ('y', 'j'),
-    ('ni', 'n^i'),
-    ('nj', 'n^'),
-    ('hi', 'çi'),
-    ('hj', 'ç'),
-    ('f', 'ɸ'),
-    ('I', 'i*'),
-    ('U', 'ɯ*'),
-    ('r', 'ɾ')
-]]
-
-# List of (consonant, sokuon) pairs:
-_real_sokuon = [(re.compile('%s' % x[0]), x[1]) for x in [
-    (r'Q([↑↓]*[kg])', r'k#\1'),
-    (r'Q([↑↓]*[tdjʧ])', r't#\1'),
-    (r'Q([↑↓]*[sʃ])', r's\1'),
-    (r'Q([↑↓]*[pb])', r'p#\1')
-]]
-
-# List of (consonant, hatsuon) pairs:
-_real_hatsuon = [(re.compile('%s' % x[0]), x[1]) for x in [
-    (r'N([↑↓]*[pbm])', r'm\1'),
-    (r'N([↑↓]*[ʧʥj])', r'n^\1'),
-    (r'N([↑↓]*[tdn])', r'n\1'),
-    (r'N([↑↓]*[kg])', r'ŋ\1')
 ]]
 
 
@@ -109,45 +60,4 @@ def japanese_to_romaji_with_accent(text):
                     text += '↑'
         if i < len(marks):
             text += unidecode(marks[i]).replace(' ', '')
-    return text
-
-
-def get_real_sokuon(text):
-    for regex, replacement in _real_sokuon:
-        text = re.sub(regex, replacement, text)
-    return text
-
-
-def get_real_hatsuon(text):
-    for regex, replacement in _real_hatsuon:
-        text = re.sub(regex, replacement, text)
-    return text
-
-
-def japanese_to_ipa(text):
-    text = japanese_to_romaji_with_accent(text).replace('...', '…')
-    text = re.sub(
-        r'([aiueo])\1+', lambda x: x.group(0)[0]+'ː'*(len(x.group(0))-1), text)
-    text = get_real_sokuon(text)
-    text = get_real_hatsuon(text)
-    for regex, replacement in _romaji_to_ipa:
-        text = re.sub(regex, replacement, text)
-    return text
-
-
-def japanese_to_ipa2(text):
-    text = japanese_to_romaji_with_accent(text).replace('...', '…')
-    text = get_real_sokuon(text)
-    text = get_real_hatsuon(text)
-    for regex, replacement in _romaji_to_ipa2:
-        text = re.sub(regex, replacement, text)
-    return text
-
-
-def japanese_to_ipa3(text):
-    text = japanese_to_ipa2(text).replace('n^', 'ȵ').replace(
-        'ʃ', 'ɕ').replace('*', '\u0325').replace('#', '\u031a')
-    text = re.sub(
-        r'([aiɯeo])\1+', lambda x: x.group(0)[0]+'ː'*(len(x.group(0))-1), text)
-    text = re.sub(r'((?:^|\s)(?:ts|tɕ|[kpt]))', r'\1ʰ', text)
     return text

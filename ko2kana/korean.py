@@ -1,6 +1,5 @@
 import re
 from jamo import h2j, j2hcj
-import ko_pron
 from g2pk2 import G2p
 
 g2pk = G2p()
@@ -65,27 +64,6 @@ _latin_to_hangul = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
     ('x', '엑스'),
     ('y', '와이'),
     ('z', '제트')
-]]
-
-# List of (ipa, lazy ipa) pairs:
-_ipa_to_lazy_ipa = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
-    ('t͡ɕ','ʧ'),
-    ('d͡ʑ','ʥ'),
-    ('ɲ','n^'),
-    ('ɕ','ʃ'),
-    ('ʷ','w'),
-    ('ɭ','l`'),
-    ('ʎ','ɾ'),
-    ('ɣ','ŋ'),
-    ('ɰ','ɯ'),
-    ('ʝ','j'),
-    ('ʌ','ə'),
-    ('ɡ','g'),
-    ('\u031a','#'),
-    ('\u0348','='),
-    ('\u031e',''),
-    ('\u0320',''),
-    ('\u0339','')
 ]]
 
 
@@ -197,23 +175,6 @@ def number_to_hangul(text):
     for d, n in zip(digits, names):
         text = text.replace(d, n)
     return text
-
-
-def korean_to_lazy_ipa(text):
-    text = latin_to_hangul(text)
-    text = number_to_hangul(text)
-    text=re.sub('[\uac00-\ud7af]+',lambda x:ko_pron.romanise(x.group(0),'ipa').split('] ~ [')[0],text)
-    for regex, replacement in _ipa_to_lazy_ipa:
-        text = re.sub(regex, replacement, text)
-    return text
-
-
-def korean_to_ipa(text):
-    text = korean_to_lazy_ipa(text)
-    return text.replace('ʧ','tʃ').replace('ʥ','dʑ')
-
-
-
 
 
 
