@@ -1,5 +1,5 @@
-from text.japanese import japanese_to_romaji_with_accent
-from text.korean import (
+from .japanese import japanese_to_romaji_with_accent
+from .korean import (
     join_jamos, j2hcj, h2j,
     latin_to_hangul,
     number_to_hangul,
@@ -46,8 +46,8 @@ def get_word_list(text):
 
 
 def korean2katakana(text):
-    text = '/' + text.replace('/', ' ').replace('|', ' ').replace('^', ' ').replace('  ', ' ').replace(' ', '^')
     word_lst = get_word_list(text)
+    text = '/' + text.replace('/', ' ').replace('|', ' ').replace('^', ' ').replace('  ', ' ').replace(' ', '^')
     new_lst = []
 
     for i, s in enumerate(word_lst):
@@ -82,4 +82,5 @@ def korean2katakana(text):
     return result
 
 
-# print(korean2katakana("안녕하세요.")) -> アンニョンーハセヨ
+if __name__ == '__main__': 
+    print(korean2katakana("안녕하세요.")) # -> アンニョンーハセヨ
