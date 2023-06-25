@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="ko2kana",
-    version="1.0",
+    version="1.2",
     license='MIT',
     author="kdr",
     author_email="kdrhacker1234@gmail.com",
@@ -24,6 +24,7 @@ setuptools.setup(
         'g2pk2',
         'jamo',
         'cmake',
+        'jaconv',
         'pyopenjtalk',
     ],
     py_modules = ['ko2kana']
