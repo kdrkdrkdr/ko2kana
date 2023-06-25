@@ -1,5 +1,5 @@
-from japanese import japanese_to_romaji_with_accent
-from korean import (
+from text.japanese import japanese_to_romaji_with_accent
+from text.korean import (
     join_jamos, j2hcj, h2j,
     latin_to_hangul,
     number_to_hangul,
@@ -32,10 +32,7 @@ repl_lst = {
     'ㅐ': 'ㅔ',
     'ㅡ': 'ㅜ',
 
-    # '루//ㅎ': 'ㄹ',
     '||//ㅎ': 'ㄹ',
-    # '루/ㄹ':'/ㄹ',
-    # 'ㄹ/ㄹ': 'ㄹ'
 }
 
 
@@ -63,19 +60,7 @@ def korean2katakana(text):
                 dh[-1] = 'ㄴ|'
             
             elif dh[-1] == 'ㄹ':
-                # 여기다가 뭐 조건 걸어야하는데... 뭐였더라...?
                 dh[-1] = '||/'
-                # if dh[0] == 'ㄹ':
-                #     dh[-1] = '||/'
-
-                # elif i != len(word_lst)-1:
-                #     if word_lst[i+1][0] == 'ㅇ':
-                #         dh[-1] = '||/'
-
-                # elif len(word_lst)-1 == i or word_lst[i+1] == '^':
-                #     dh[-1] = '루/'
-                # else:
-                #     dh[-1] = '||/'
 
             else: # ㄱ ㄷ ㅂ
                 dh[-1] = dh[-1]
@@ -97,4 +82,4 @@ def korean2katakana(text):
     return result
 
 
-print(korean2katakana("안녕하세요."))
+# print(korean2katakana("안녕하세요.")) -> アンニョンーハセヨ
