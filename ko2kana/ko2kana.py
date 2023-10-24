@@ -35,7 +35,6 @@ pre_repl = {
     'ㅡ': 'ㅜ',
 
     # '||//ㅎ': 'ㄹ',
-
 }
 # ァ, ィ, ゥ, ェ, ォ, ャ, ュ, ョ
 
@@ -44,20 +43,28 @@ post_repl = {
     'si': 'shi',
     'cu': 'tsu',
     'c': 'ch',
-    'chy': 'chiy',
-    'ti': 'ティ',
-    'tu': 'トゥ',
-    'di': 'ディ',
-    'du': 'ドゥ',
+
     'i*a': 'ya',
     'i*u': 'yu',
     'i*o': 'yo',
-    'i*e': 'ie',
+    'i*e': 'ye',
+
+    'ty': 'ti*',
+    'dy': 'di*',
+
     '*a': 'ァ',
     '*i': 'ィ',
     '*u': 'ゥ',
     '*e': 'ェ',
     '*o': 'ォ',
+
+    'ti': 'ティ',
+    'tu': 'トゥ',
+    'di': 'ディ',
+    'du': 'ドゥ',
+
+    'chy': 'chiy',
+    'chiye': 'chie',
 }
 
 def get_word_list(text):
@@ -102,7 +109,6 @@ def korean2katakana(text):
     for k, v in post_repl.items():
         kr2ro = kr2ro.replace(k, v)
     
-    kr2ro = kr2ro.replace('chy', 'chiy')
     result = jaconv.alphabet2kata(kr2ro)
     result = result.replace('/', '').replace('|', 'ー').replace('^', '')
     return result
