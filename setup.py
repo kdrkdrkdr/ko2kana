@@ -26,6 +26,7 @@ setuptools.setup(
         'cmake',
         'jaconv',
         'pyopenjtalk',
+        'g2pk2',
     ],
     py_modules = ['ko2kana']
 )

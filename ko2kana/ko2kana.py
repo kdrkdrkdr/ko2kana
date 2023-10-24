@@ -9,7 +9,7 @@ import re
 import jaconv
 
 
-repl_lst = {
+pre_repl = {
     'ㄲ': 'ㅋ',
     'ㄸ': 'ㅌ',
     'ㅃ': 'ㅍ',
@@ -21,20 +21,44 @@ repl_lst = {
     'ㅘ': 'ㅜㅏ',
     'ㅝ': 'ㅜ/ㅓ',
     'ㅞ': 'ㅜ/ㅔ',
-    'ㅟ': 'ㅜㅣ',
-    'ㅢ': 'ㅜㅣ',
+    'ㅟ': 'ㅜ*ㅣ',
+    'ㅢ': 'ㅡ*ㅣ',
 
-    'ㅒ': 'ㅣㅔ',
+    'ㅒ': 'ㅣ*ㅔ',
+    'ㅖ': 'ㅣ*ㅔ',
     'ㅕ': 'ㅛ',
-    'ㅖ': 'ㅣㅔ',
+    'ㅑ': 'ㅣ*ㅏ',
+    'ㅛ': 'ㅣ*ㅗ',
 
-    'ㅓ': 'ㅗ',
+    'ㅓ': 'ㅏ',
     'ㅐ': 'ㅔ',
     'ㅡ': 'ㅜ',
 
-    '||//ㅎ': 'ㄹ',
-}
+    # '||//ㅎ': 'ㄹ',
 
+}
+# ァ, ィ, ゥ, ェ, ォ, ャ, ュ, ョ
+
+post_repl = {
+    'j': 'z',
+    'si': 'shi',
+    'cu': 'tsu',
+    'c': 'ch',
+    'chy': 'chiy',
+    'ti': 'ティ',
+    'tu': 'トゥ',
+    'di': 'ディ',
+    'du': 'ドゥ',
+    'i*a': 'ya',
+    'i*u': 'yu',
+    'i*o': 'yo',
+    'i*e': 'ie',
+    '*a': 'ァ',
+    '*i': 'ィ',
+    '*u': 'ゥ',
+    '*e': 'ェ',
+    '*o': 'ォ',
+}
 
 def get_word_list(text):
     text = latin_to_hangul(text)
@@ -70,17 +94,19 @@ def korean2katakana(text):
         new_lst.extend(dh)
 
     kr = ''.join(new_lst)
-    
-    for k, v in repl_lst.items():
+    for k, v in pre_repl.items():
         kr = kr.replace(k, v)
-        
-    kr2ro = japanese_to_romaji_with_accent(kr).replace('si', 'shi').replace('c', 'ts') \
-                                              .replace('ti', 'ティ').replace('tu', 'トゥ') \
-                                              .replace('di', 'ディ').replace('du', 'ドゥ')
+    print(kr)
+    kr2ro = japanese_to_romaji_with_accent(kr)
+    print(kr2ro)
+    for k, v in post_repl.items():
+        kr2ro = kr2ro.replace(k, v)
+    
+    kr2ro = kr2ro.replace('chy', 'chiy')
     result = jaconv.alphabet2kata(kr2ro)
     result = result.replace('/', '').replace('|', 'ー').replace('^', '')
     return result
 
 
 if __name__ == '__main__': 
-    print(korean2katakana("안녕하세요.")) # -> アンニョンーハセヨ
+    print(korean2katakana("안녕하세요")) # -> アンニョンーハセヨ
