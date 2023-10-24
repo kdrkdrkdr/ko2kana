@@ -96,9 +96,9 @@ def korean2katakana(text):
     kr = ''.join(new_lst)
     for k, v in pre_repl.items():
         kr = kr.replace(k, v)
-    print(kr)
+
     kr2ro = japanese_to_romaji_with_accent(kr)
-    print(kr2ro)
+
     for k, v in post_repl.items():
         kr2ro = kr2ro.replace(k, v)
     
