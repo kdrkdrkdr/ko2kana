@@ -14,8 +14,7 @@ from .numerals import convert_num
 
  
 class G2p(object):
-    def __init__(self, use_konlpy=False, mecab_path=None):
-        self.use_konlpy = use_konlpy
+    def __init__(self, mecab_path=None):
         self.mecab_path = mecab_path
         
         self.check_mecab()
@@ -30,60 +29,37 @@ class G2p(object):
         return tmp
 
     def check_mecab(self):
-        if self.use_konlpy:
-            spam_spec = importlib.util.find_spec("konlpy")
+        if platform.system()=='Windows':
+            spam_spec = importlib.util.find_spec("eunjeon")
             non_found = spam_spec is None
             if non_found:
-                print(f'you have to install konlpy. install it...')
-                p = subprocess.Popen([sys.executable, "-m", "pip", "install", 'konlpy'])
+                print(f'you have to install eunjeon. install it...')
+                p = subprocess.Popen('pip install eunjeon')
                 p.wait()
-            else:
-                print("konlpy installed")
         else:
-            if platform.system()=='Windows':
-                spam_spec = importlib.util.find_spec("eunjeon")
-                non_found = spam_spec is None
-                if non_found:
-                    print(f'you have to install eunjeon. install it...')
-                    p = subprocess.Popen('pip install eunjeon')
-                    p.wait()
-            else:
-                spam_spec = importlib.util.find_spec("mecab")
-                non_found = spam_spec is None
-                if non_found:
-                    print(f'you have to install python-mecab-ko. install it...')
-                    p = subprocess.Popen([sys.executable, "-m", "pip", "install", 'python-mecab-ko'])
-                    p.wait()
-                # else:
+            spam_spec = importlib.util.find_spec("mecab")
+            non_found = spam_spec is None
+            if non_found:
+                print(f'you have to install python-mecab-ko. install it...')
+                p = subprocess.Popen([sys.executable, "-m", "pip", "install", 'python-mecab-ko'])
+                p.wait()
+            # else:
                     # print("mecab installed")
 
 
     def get_mecab(self):
-        if self.use_konlpy:
+        if platform.system() == 'Windows':
             try:
-                from konlpy.tag import Mecab
+                m = self.load_module_func('eunjeon')
+                return m.Mecab()
             except Exception as e:
-                raise print(f'failed to load konlpy')
-            try:
-                if self.mecab_path:
-                    return Mecab(self.mecab_path)
-                else:
-                    return Mecab()
-            except Exception as e:
-                raise print(f"failed to open konlpy.tag.Mecab")
+                raise print(f'you have to install eunjeon. "pip install eunjeon"')
         else:
-            if platform.system() == 'Windows':
-                try:
-                    m = self.load_module_func('eunjeon')
-                    return m.Mecab()
-                except Exception as e:
-                    raise print(f'you have to install eunjeon. "pip install eunjeon"')
-            else:
-                try:
-                    m = self.load_module_func('mecab')
-                    return m.MeCab()
-                except Exception as e:
-                    print("Failed to load python-mecab-ko:", e)
+            try:
+                m = self.load_module_func('mecab')
+                return m.MeCab()
+            except Exception as e:
+                print("Failed to load python-mecab-ko:", e)
 
 
     def idioms(self, string, descriptive=False, verbose=False):
