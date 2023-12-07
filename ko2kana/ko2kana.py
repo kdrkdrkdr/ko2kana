@@ -91,7 +91,7 @@ def korean2katakana(text):
                 dh[-1] = 'ㄴ|'
             
             elif dh[-1] == 'ㄹ':
-                dh[-1] = '||/'
+                dh[-1] = '|/'
 
             else: # ㄱ ㄷ ㅂ
                 dh[-1] = dh[-1]
