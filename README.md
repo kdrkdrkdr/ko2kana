@@ -15,8 +15,8 @@ pip install ko2kana
 ## Usage
 
 ```python
-from ko2kana import korean2katakana
-s = korean2katakana("안녕하세요.")
+from ko2kana import toKana
+s = toKana("안녕하세요.")
 print(s) 
 'アンニョンーハセヨ'
 ```
