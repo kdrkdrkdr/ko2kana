@@ -7,14 +7,6 @@ However, this method is awkward, inaccurate and if the pronunciation symbol is i
 Therefore, only phonemes present in the TTS data were made close to the pronunciation of other languages.
 
 
-## Requirements
-* python >= 3.8
-* jamo
-* g2pk2
-* cmake
-* pyopenjtalk
-
-
 ## Installation
 ```bash
 pip install ko2kana

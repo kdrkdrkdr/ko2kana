@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="ko2kana",
-    version="1.4",
+    version="1.5",
     license='MIT',
     author="kdr",
     author_email="kdrhacker1234@gmail.com",
@@ -21,7 +21,6 @@ setuptools.setup(
         "Operating System :: OS Independent"
     ],
     install_requires=[
-        'g2pk2',
         'jamo',
         'g2p_en'
     ],
