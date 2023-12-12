@@ -9,7 +9,7 @@ from jamo import h2j
 from .special import jyeo, ye, consonant_ui, josa_ui, vowel_ui, jamo, rieulgiyeok, rieulbieub, verb_nieun, balb, palatalize, modifying_rieul
 from .regular import link1, link2, link3, link4
 from .utils import annotate, compose, group, gloss, parse_table, get_rule_id2text
-from .english import convert_eng
+# from .english import convert_eng
 from .korean import join_jamos, split_syllables
 from .numerals import convert_num
 
@@ -144,7 +144,7 @@ class G2p(object):
         string = self.idioms(string, descriptive, verbose)
 
         # 2 Convert English to Hangul
-        string = convert_eng(string)
+        # string = convert_eng(string)
 
         # 3. annotate
         string = annotate(string, self.mecab)

@@ -1,7 +1,7 @@
 # ko2kana
-Tools for writing Korean pronunciation in katakana.
+Tools for writing Korean and English pronunciation in katakana.
 
-Replace Korean with Katakana so that you can read Korean in the TTS Japanese model.
+Replace Korean and English with Katakana so that you can read them in the TTS Japanese model.
 Typically, when you create a multilingual TTS, you organize the text with an IPA cleaner. 
 However, this method is awkward, inaccurate and if the pronunciation symbol is insufficient or absent, the voice is missing.
 Therefore, only phonemes present in the TTS data were made close to the pronunciation of other languages.
