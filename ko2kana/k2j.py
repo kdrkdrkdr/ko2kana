@@ -465,7 +465,6 @@ def english2katakana(text: str, accent_char=''):
     out = ''
     buf = []
     arpabets = g2p_en(text)
-    print(arpabets)
     no_xtu = True
     for i in arpabets:
         if '0' <= i[-1] <= '9':

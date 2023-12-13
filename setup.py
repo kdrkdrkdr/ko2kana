@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="ko2kana",
-    version="1.7",
+    version="1.8",
     license='MIT',
     author="kdr",
     author_email="kdrhacker1234@gmail.com",
