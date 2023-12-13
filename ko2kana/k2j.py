@@ -1,11 +1,13 @@
-from .g2pk3 import G2p
-import unicodedata
 import re
+import unicodedata
+from g2p_en import G2p as G2pEn
+from .g2pk3 import G2p as G2pKo
+from .english import convert_eng
 
+g2p_en = G2pEn()
+g2p_ko = G2pKo()
 
-g2p = G2p()
-
-repl_dict = {
+ko_dict = {
     'ᄁ': 'ᄏ',
     'ᄄ': 'ᄐ',
     'ᄈ': 'ᄑ',
@@ -226,18 +228,287 @@ repl_dict = {
 }
 
 def korean2katakana(text: str):
-    text = unicodedata.normalize('NFD', g2p(text))
-    for h, k in repl_dict.items():
+    text = unicodedata.normalize('NFD', g2p_ko(text))
+    for h, k in ko_dict.items():
         text = text.replace(h, k)
     return unicodedata.normalize('NFKC', text)
 
+ja_vowel_dict = {
+    'AA': 'A-',
+    'AE': 'A',
+    'AH': 'A',
+    'AO': 'O-',
+    'AW': 'AU',
+    'AX': 'E',
+    'AXR': 'A-',
+    'AY': 'AI',
+    'EH': 'E',
+    'ER': 'A-',
+    'EY': 'EI',
+    'IH': 'I',
+    'IX': 'I',
+    'IY': 'I-',
+    'OW': 'O-',
+    'OY': 'OI',
+    'UH': 'U',
+    'UW': 'U-',
+    'UX': 'U-'
+}
 
-def toKana(text: str):
-    return re.sub(
-        "[가-힣a-zA-Z]+", 
+ja_dict = {
+    'A': 'ア',
+    'I': 'イ',
+    'U': 'ウ',
+    'E': 'エ',
+    'O': 'オ',
+
+    'B':  'ブ',
+    'BA': 'バ',
+    'BI': 'ビ',
+    'BU': 'ブ',
+    'BE': 'ベ',
+    'BO': 'ボ',
+
+    'CH':  'チ',
+    'CHA': 'チャ',
+    'CHI': 'チ',
+    'CHU': 'チュ',
+    'CHE': 'チェ',
+    'CHO': 'チョ',
+
+    'D':  'ド',
+    'DA': 'ダ',
+    'DI': 'ディ',
+    'DU': 'ドゥ',
+    'DE': 'デ',
+    'DO': 'ド',
+
+    'DH':  'ズ',
+    'DHA': 'ザ',
+    'DHI': 'ジ',
+    'DHU': 'ズ',
+    'DHE': 'ゼ',
+    'DHO': 'ゾ',
+
+    'F':  'フ',
+    'FA': 'ファ',
+    'FI': 'フィ',
+    'FU': 'フ',
+    'FE': 'フェ',
+    'FO': 'フォ',
+
+    'G':  'グ',
+    'GA': 'ガ',
+    'GI': 'ギ',
+    'GU': 'グ',
+    'GE': 'ゲ',
+    'GO': 'ゴ',
+
+    'HH':  'ヒ',
+    'HHA': 'ハ',
+    'HHI': 'ヒ',
+    'HHU': 'フ',
+    'HHE': 'へ',
+    'HHO': 'ホ',
+
+    'JH':  'ジ',
+    'JHA': 'ジャ',
+    'JHI': 'ジ',
+    'JHU': 'ジュ',
+    'JHE': 'ジェ',
+    'JHO': 'ジョ',
+
+    'K':  'ク',
+    'KA': 'カ',
+    'KI': 'キ',
+    'KU': 'ク',
+    'KE': 'ケ',
+    'KO': 'コ',
+
+    'L':  'ル',
+    'LA': 'ラ',
+    'LI': 'リ',
+    'LU': 'ル',
+    'LE': 'レ',
+    'LO': 'ロ',
+
+    'M':  'ム',
+    'MA': 'マ',
+    'MI': 'ミ',
+    'MU': 'ム',
+    'ME': 'メ',
+    'MO': 'モ',
+
+    'N':  'ン',
+    'NA': 'ナ',
+    'NI': 'ニ',
+    'NU': 'ヌ',
+    'NE': 'ネ',
+    'NO': 'ノ',
+
+    'NG':  'ング',
+    'NGA': 'ンガ',
+    'NGI': 'ンギ',
+    'NGU': 'ング',
+    'NGE': 'ンゲ',
+    'NGO': 'ンゴ',
+
+    'P':  'プ',
+    'PA': 'パ',
+    'PI': 'ピ',
+    'PU': 'プ',
+    'PE': 'ペ',
+    'PO': 'ポ',
+
+    'R':  'ル',
+    'RA': 'ラ',
+    'RI': 'リ',
+    'RU': 'ル',
+    'RE': 'レ',
+    'RO': 'ロ',
+
+    'S':  'ス',
+    'SA': 'サ',
+    'SI': 'シ',
+    'SU': 'ス',
+    'SE': 'セ',
+    'SO': 'ソ',
+
+    'SH':  'シュ',
+    'SHA': 'シャ',
+    'SHI': 'シ',
+    'SHU': 'シュ',
+    'SHE': 'シェ',
+    'SHO': 'ショ',
+
+    'T':  'ト',
+    'TA': 'タ',
+    'TI': 'ティ',
+    'TU': 'トゥ',
+    'TE': 'テ',
+    'TO': 'ト',
+
+    'TH':  'ス',
+    'THA': 'サ',
+    'THI': 'シ',
+    'THU': 'ス',
+    'THE': 'セ',
+    'THO': 'ソ',
+
+    'TS':  'ツ',
+    'TSA': 'ツァ',
+    'TSI': 'ツィ',
+    'TSU': 'ツ',
+    'TSE': 'ツェ',
+    'TSO': 'ツォ',
+
+    'V':  'ヴ',
+    'VA': 'ヴァ',
+    'VI': 'ヴィ',
+    'VU': 'ヴ',
+    'VE': 'ヴェ',
+    'VO': 'ヴォ',
+
+    'W':  'ウ',
+    'WA': 'ワ',
+    'WI': 'ウィ',
+    'WU': 'ウ',
+    'WE': 'ウェ',
+    'WO': 'ヲ',
+
+    'WH':  'ホウ',
+    'WHA': 'ホワ',
+    'WHI': 'ホウィ',
+    'WHU': 'ホウ',
+    'WHE': 'ホウェ',
+    'WHO': 'ホヲ',
+
+    'Y':  'イ',
+    'YA': 'ヤ',
+    'YI': 'イ',
+    'YU': 'ユ',
+    'YE': 'イェ',
+    'YO': 'ヨ',
+
+    'Z':  'ズ',
+    'ZA': 'ザ',
+    'ZI': 'ジ',
+    'ZU': 'ズ',
+    'ZE': 'ゼ',
+    'ZO': 'ゾ',
+
+    'ZH':  'ジ',
+    'ZHA': 'ジャ',
+    'ZHI': 'ジ',
+    'ZHU': 'ジュ',
+    'ZHE': 'ジェ',
+    'ZHO': 'ジョ',
+    
+    '-': 'ー'
+}
+
+ja_xtu_list = ['CH', 'D', 'JH', 'K', 'P', 'SH', 'T']
+
+def english2katakana(text: str, accent_char=''):
+    def dump_buf(buf, no_xtu):
+        if len(buf) == 0:
+            return ''
+        out = 'ッ' if not no_xtu and buf[0] in ja_xtu_list else ''
+        for i in range(len(buf)):
+            tail = ''.join(buf[i:])
+            if tail in ja_dict:
+                out += ja_dict[tail]
+                break
+            out += ja_dict.get(buf[i], buf[i])
+        return out
+
+    out = ''
+    buf = []
+    arpabets = g2p_en(text)
+    no_xtu = True
+    for i in arpabets:
+        if '0' <= i[-1] <= '9':
+            # vowel
+            vowel = ja_vowel_dict.get(i[:-1], '')
+            long_vowel = len(vowel) >= 2
+            if len(vowel) >= 1:
+                buf.append(vowel[0])
+                out += dump_buf(buf, no_xtu or len(buf) > 2)
+                no_xtu = long_vowel
+            if i[-1] == '1':
+                out += accent_char
+            if long_vowel:
+                out += ja_dict.get(vowel[1], '')
+            buf = []
+        elif i == ' ':
+            # word boundary
+            out += dump_buf(buf, no_xtu or len(buf) > 1) + ' '
+            buf = []
+            no_xtu = True
+        else:
+            # consonant
+            # speically handle NG in the middle
+            # if G or K follows, replace the sequence with N G or N K
+            if len(buf) > 0 and buf[-1] == 'NG' and (i == 'G' or i == 'K'): 
+                buf = buf[:-1] + ['N', i]
+            else:
+                buf.append(i)
+    # trailing 
+    out += dump_buf(buf, no_xtu or len(buf) > 1)
+    return out
+
+def toKana(text: str, accent_char=''):
+    ko_replaced = re.sub(
+        "[가-힣]+", 
         lambda x: korean2katakana(x.group(0)), 
         text
     )
+    en_replaced = re.sub(
+        "([a-zA-Z']+ *)*[a-zA-Z']+", 
+        lambda x: english2katakana(x.group(0), accent_char), 
+        ko_replaced
+    )
+    return en_replaced
 
 if __name__ == '__main__':
-    print(toKana('Hello. こんいちわ。안녕하세요.')) # ホーロ. こんいちわ。アンニョンーハセヨ.
+    print(toKana('Hello. こんいちわ。안녕하세요.')) # ハロー. こんいちわ。アンニョンーハセヨ.
